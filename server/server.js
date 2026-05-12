@@ -1,15 +1,20 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import connectDB from "./config/db.js";
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./config/db")
 
 const app = express();
-dotenv.config();
+require("dotenv").config();
+
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
 connectDB();
+
+const auditRoutes = require("./routes/auditRoutes");
+
+app.use("/api", auditRoutes);
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`app listening on http://localhost:${PORT}`);

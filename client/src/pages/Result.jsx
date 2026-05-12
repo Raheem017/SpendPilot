@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import API from "../services/api";
 
 const Result = () => {
   const location = useLocation();
@@ -154,7 +155,10 @@ const Result = () => {
               className="hidden"
               onChange={handleLeadChange}
             />
-            <button className="bg-blue-600 rounded-2xl" onClick={saveLead}>
+            <button
+              className="bg-blue-600 rounded-2xl py-3 cursor-pointer"
+              onClick={saveLead}
+            >
               Get Report
             </button>
           </div>
