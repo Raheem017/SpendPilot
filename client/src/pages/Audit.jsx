@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toolOptions } from "../data/toolOptions";
-import { generateAudit } from "../services/api";
+import API from "../services/api";
 
 const Audit = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Audit = () => {
       {
         tool: "Cursor",
         plan: toolOptions["Cursor"][0],
-        spend: "",
+        monthlySpend: "",
         seats: "",
       },
     ],
@@ -65,7 +65,7 @@ const Audit = () => {
         {
           tool: "Cursor",
           plan: toolOptions["Cursor"][0],
-          spend: "",
+          monthlySpend: "",
           seats: "",
         },
       ],
@@ -80,15 +80,14 @@ const Audit = () => {
       tools: filteredTools,
     }));
   };
-
-  const handleSubmit = async () => {
+  const generateAudit = async () => {
     try {
       setLoading(true);
 
-      const result = await generateAudit(formData);
+      const response = await API.post("/audit", formData);
 
       navigate("/result", {
-        state: result,
+        state: response.data,
       });
     } catch (error) {
       console.log(error);
@@ -118,6 +117,7 @@ const Audit = () => {
               <input
                 type="number"
                 value={formData.teamSize}
+                placeholder="eg:10"
                 onChange={(e) =>
                   handleTopLevelChange("teamSize", e.target.value)
                 }
@@ -208,9 +208,10 @@ const Audit = () => {
 
                   <input
                     type="number"
-                    value={tool.spend}
+                    value={tool.monthlySpend}
+                    placeholder="$200"
                     onChange={(e) =>
-                      handleToolChange(index, "spend", e.target.value)
+                      handleToolChange(index, "monthlySpend", e.target.value)
                     }
                     className="w-full bg-slate-800 border border-slate-700 rounded-2xl px-5 py-4"
                   />
@@ -222,6 +223,7 @@ const Audit = () => {
                   <input
                     type="number"
                     value={tool.seats}
+                    placeholder="5"
                     onChange={(e) =>
                       handleToolChange(index, "seats", e.target.value)
                     }
@@ -243,7 +245,7 @@ const Audit = () => {
         </div>
 
         <button
-          onClick={handleSubmit}
+          onClick={generateAudit}
           className="w-full bg-gradient-to-r from-blue-600 to-green-500 py-5 rounded-3xl text-xl font-semibold"
         >
           {loading ? "Generating Audit..." : "Generate Audit Report"}
