@@ -1,19 +1,15 @@
+
 const mongoose = require("mongoose");
 
 const leadSchema = new mongoose.Schema(
   {
-    email: String,
-
+    email: { type: String, required: true },
     companyName: String,
-
     role: String,
-
-    teamSize: Number,
+    auditId: { type: String, required: true },
+    annualSavings: Number,
   },
-
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Lead", leadSchema);

@@ -41,7 +41,9 @@ const getPublicAudit = async (req, res) => {
     const audit = await Audit.findOne({
       publicId: req.params.id,
     });
-
+    if (!audit) {
+      return res.status(404).json({ message: "Audit report not found" });
+    }
     res.json(audit);
   } catch (error) {
     res.status(500).json({

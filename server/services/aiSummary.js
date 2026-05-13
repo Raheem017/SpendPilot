@@ -1,41 +1,28 @@
 const axios = require("axios");
 
 const generateSummary = async (audit) => {
+  if (audit.monthlySavings === 0) {
+    return "Your AI infrastructure is currently optimized for your team size. No immediate cost-saving adjustments are required.";
+  }
+
   try {
     const prompt = `
-You are an AI infrastructure consultant.
-
-Generate a short professional AI spend optimization summary.
-
-Monthly Savings:
-$${audit.monthlySavings}
-
-Annual Savings:
-$${audit.annualSavings}
-
-Recommendations:
-${JSON.stringify(audit.recommendations)}
-`;
+      You are an AI infrastructure consultant. 
+      Generate a professional 2-sentence executive summary.
+      Total Annual Savings: $${audit.annualSavings}.
+      Focus strictly on the specific plan downgrades or seat-minimum avoidance identified.
+      Data: ${JSON.stringify(audit.recommendations)}
+    `;
 
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
-
       {
         model: "openai/gpt-3.5-turbo",
-
-        messages: [
-          {
-            role: "user",
-
-            content: prompt,
-          },
-        ],
+        messages: [{ role: "user", content: prompt }],
       },
-
       {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-
           "Content-Type": "application/json",
         },
       },
@@ -43,11 +30,7 @@ ${JSON.stringify(audit.recommendations)}
 
     return response.data.choices[0].message.content;
   } catch (error) {
-    console.log(error.response?.data || error.message);
-
-    return `
-Your organization has opportunities to optimize AI infrastructure spending through pricing adjustments, plan consolidation, and discounted infrastructure sourcing.
-`;
+    return `We have identified $${audit.annualSavings} in potential annual savings by optimizing your tool tiers and avoiding unnecessary seat minimums.`;
   }
 };
 

@@ -84,7 +84,16 @@ const Audit = () => {
     try {
       setLoading(true);
 
-      const response = await API.post("/audit", formData);
+      const normalizedData = {
+        ...formData,
+        tools: formData.tools.map((t) => ({
+          ...t,
+          tool: t.tool.toLowerCase(),
+          plan: t.plan.toLowerCase(),
+        })),
+      };
+
+      const response = await API.post("/audit", normalizedData);
 
       navigate("/result", {
         state: response.data,
