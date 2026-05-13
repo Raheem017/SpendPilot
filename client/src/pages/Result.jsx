@@ -19,25 +19,6 @@ const Result = () => {
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  // const saveLead = async () => {
-  //   // Basic Honeypot Check
-  //   if (leadData.website) return;
-
-  //   setLoading(true);
-  //   try {
-  //     await API.post("/leads", {
-  //       ...leadData,
-  //       publicId: data.publicId,
-  //       totalSavings: data.annualSavings,
-  //     });
-  //     setSubmitted(true);
-  //   } catch (error) {
-  //     console.error("Submission error:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const saveLead = async () => {
     if (leadData.website) return;
 
