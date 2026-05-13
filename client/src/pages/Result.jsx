@@ -1,4 +1,3 @@
-
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import API from "../services/api";
@@ -208,7 +207,7 @@ const Result = () => {
                 <button
                   onClick={saveLead}
                   disabled={loading || !isValidEmail(leadData.email)}
-                    className="md:col-span-2 w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 text-white font-bold py-5 rounded-2xl transition-all shadow-lg shadow-blue-600/20"
+                  className="md:col-span-2 w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 text-white font-bold py-5 rounded-2xl transition-all shadow-lg shadow-blue-600/20"
                 >
                   {loading ? "Processing..." : "Get Detailed Report"}
                 </button>
