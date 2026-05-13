@@ -20,7 +20,7 @@ const createLead = async (req, res) => {
       annualSavings,
     });
 
-    const reportLink = `${process.env.FRONTEND_URL || "http://localhost:5173"}/a/${auditId}`;
+    const reportLink = `${process.env.FRONTEND_URL || "https://spend-pilot-one.vercel.app/"}/a/${auditId}`;
 
     await resend.emails.send({
       from: "SpendPilot <onboarding@resend.dev>",
