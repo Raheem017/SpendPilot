@@ -8,9 +8,7 @@ const { createLead } = require("../controllers/leadController"); // Import new c
 const router = express.Router();
 
 router.post("/audit", createAudit);
-router.get("/audit/:id", getPublicAudit);
-
-// Requirement 5: Lead Capture Route
+router.get("/public/:id", getPublicAudit);
 router.post("/leads", createLead);
 
 module.exports = router;

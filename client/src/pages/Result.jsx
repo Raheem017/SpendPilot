@@ -22,6 +22,11 @@ const Result = () => {
   const saveLead = async () => {
     if (leadData.website) return;
 
+    if (!data.publicId) {
+      alert("Audit data missing. Please run a new audit.");
+      return;
+    }
+
     setLoading(true);
     try {
       // Match the keys expected by  leadController.js
@@ -213,12 +218,29 @@ const Result = () => {
           <p className="text-slate-500 text-sm mb-4 font-medium uppercase tracking-widest">
             Share This Audit
           </p>
-          <div className="flex items-center gap-2 max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-2 pl-4">
+          {/* <div className="flex items-center gap-2 max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-2 pl-4">
             <span className="text-slate-500 text-xs truncate select-all">{`https://spendpilot.app/a/${data.publicId}`}</span>
             <button
               onClick={() => {
                 navigator.clipboard.writeText(
-                  `https://spendpilot.app/a/${data.publicId}`,
+                  `http://localhost:5173/a/${data.publicId}`,
+                );
+                alert("Link Copied!");
+              }}
+              className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition-colors"
+            >
+              Copy
+            </button>
+          </div> */}
+          <div className="flex items-center gap-2 max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-2 pl-4">
+            {/* Use window.location.origin to stay dynamic */}
+            <span className="text-slate-500 text-xs truncate select-all">
+              {`${window.location.origin}/a/${data.publicId}`}
+            </span>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${window.location.origin}/a/${data.publicId}`,
                 );
                 alert("Link Copied!");
               }}

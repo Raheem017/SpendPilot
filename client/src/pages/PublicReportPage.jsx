@@ -1,16 +1,19 @@
+
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from "../services/api";
 
 const PublicReportPage = () => {
-  const { id } = useParams(); // Get :id from the URL
+  const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAudit = async () => {
       try {
-        const response = await API.get(`/audits/${id}`);
+        // Matches your backend route: router.get("/public/:id", getPublicAudit);
+        const response = await API.get(`/public/${id}`);
         setData(response.data);
       } catch (error) {
         console.error("Error fetching audit:", error);
@@ -23,16 +26,25 @@ const PublicReportPage = () => {
 
   if (loading)
     return (
-      <div className="text-white text-center py-20">Loading Report...</div>
+      <div className="flex items-center justify-center min-h-screen bg-slate-950 text-white">
+        <div className="animate-pulse font-bold">Loading Report...</div>
+      </div>
     );
+
   if (!data)
-    return <div className="text-white text-center py-20">Report Not Found</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-950 text-white">
+        <div className="text-xl font-bold">Report Not Found</div>
+      </div>
+    );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white px-6 py-12">
+    <div className="min-h-screen bg-slate-950 text-white px-6 py-12 selection:bg-blue-500/30">
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-16">
-          <h1 className="text-5xl font-black mb-4">Savings Report</h1>
+          <h1 className="text-5xl font-black mb-4 bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">
+            Savings Report
+          </h1>
           <p className="text-slate-400 text-xl">
             Audit for {data.companyName || "Your Organization"}
           </p>
@@ -40,53 +52,80 @@ const PublicReportPage = () => {
 
         {/* Savings Overview */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="bg-blue-600/10 border border-blue-500/50 p-8 rounded-[2rem]">
-            <p className="text-sm font-bold text-blue-400 uppercase">
+          <div className="bg-blue-600/10 border border-blue-500/50 p-8 rounded-[2rem] shadow-[0_0_40px_rgba(59,130,246,0.1)]">
+            <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-2">
               Monthly Savings
             </p>
             <h2 className="text-6xl font-black">${data.monthlySavings}</h2>
           </div>
           <div className="bg-slate-900 border border-slate-800 p-8 rounded-[2rem]">
-            <p className="text-sm font-bold text-green-400 uppercase">
+            <p className="text-sm font-bold text-green-400 uppercase tracking-widest mb-2">
               Annualized
             </p>
             <h2 className="text-6xl font-black">${data.annualSavings}</h2>
           </div>
         </div>
 
+        {/* ADDED: AI Summary / Personalized Strategy */}
+        <section className="bg-slate-900/50 border border-slate-800 rounded-[2rem] p-8 mb-12 backdrop-blur-sm">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="flex h-3 w-3 rounded-full bg-blue-500 animate-pulse"></span>
+            <h2 className="text-xl font-bold">Personalized Strategy</h2>
+          </div>
+          <p className="text-lg text-slate-300 leading-relaxed italic">
+            "
+            {data.summary ||
+              "This strategy outlines the transition to high-efficiency AI tool tiers."}
+            "
+          </p>
+        </section>
+
         {/* Recommendations List */}
         <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase text-slate-500 px-4">
+          <h3 className="text-sm font-bold uppercase text-slate-500 px-4 tracking-widest">
             Detailed Recommendations
           </h3>
           {data.recommendations?.map((item, index) => (
             <div
               key={index}
-              className="bg-slate-900/40 border border-slate-800 rounded-3xl p-6"
+              className="bg-slate-900/40 border border-slate-800 rounded-3xl p-6 hover:border-slate-700 transition-colors"
             >
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h4 className="text-2xl font-bold">{item.tool}</h4>
-                  <p className="text-slate-400">
+                  <h4 className="text-2xl font-bold mb-1">{item.tool}</h4>
+                  <p className="text-slate-400 text-sm">
                     {item.currentPlan} →{" "}
-                    <span className="text-blue-400">
+                    <span className="text-blue-400 font-semibold">
                       {item.recommendedPlan}
                     </span>
                   </p>
                 </div>
-                <div className="text-right text-green-400 text-2xl font-black">
-                  +${item.savings}
+                <div className="text-right">
+                  <div className="text-2xl font-black text-green-400">
+                    +${item.savings}
+                  </div>
+                  <div className="text-xs text-slate-500 uppercase font-bold">
+                    Saved Monthly
+                  </div>
                 </div>
               </div>
+              {/* Optional: Show individual tool reasoning if available */}
+              {item.reason && (
+                <div className="mt-4 pt-4 border-t border-slate-800/50 text-slate-400 text-sm italic">
+                  {item.reason}
+                </div>
+              )}
             </div>
           ))}
         </div>
 
-        {/* Footer instead of Lead Gate */}
         <footer className="mt-20 pt-10 border-t border-slate-800 text-center text-slate-500">
           <p>
             Generated by SpendPilot AI. Want a new audit?{" "}
-            <a href="/" className="text-blue-500 underline">
+            <a
+              href="/"
+              className="text-blue-500 hover:text-blue-400 underline transition-colors"
+            >
               Click here
             </a>
           </p>
